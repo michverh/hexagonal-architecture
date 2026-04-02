@@ -182,20 +182,4 @@ public class Order {
     public void clearItems() {
         this.items.clear();
     }
-
-    public boolean isEditable() {
-        return status == OrderStatus.NEW || status == OrderStatus.FULFILLMENT_PENDING;
-    }
-
-    public boolean isCancellable() {
-        return status == OrderStatus.NEW || status == OrderStatus.FULFILLMENT_PENDING || status == OrderStatus.PAID;
-    }
-
-    public boolean hasPhysicalItems() {
-        return items.stream().anyMatch(item -> item.getFulfillmentType() == FulfillmentType.PHYSICAL);
-    }
-
-    public boolean isOpen() {
-        return status == OrderStatus.NEW || status == OrderStatus.PAID || status == OrderStatus.FULFILLMENT_PENDING;
-    }
 }

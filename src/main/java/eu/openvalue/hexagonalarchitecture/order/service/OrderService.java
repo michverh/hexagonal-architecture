@@ -65,7 +65,7 @@ public class OrderService {
         }
 
         Order managed = findOrder(id);
-        if (!managed.isEditable()) {
+        if (!isEditable(managed)) {
             throw new OrderOperationException("Order " + id + " can no longer be edited");
         }
 
@@ -79,7 +79,7 @@ public class OrderService {
 
     public Order cancelOrder(Long id) {
         Order managed = findOrder(id);
-        if (!managed.isCancellable()) {
+        if (!isCancellable(managed)) {
             throw new OrderOperationException("Order " + id + " can no longer be cancelled");
         }
         managed.setStatus(OrderStatus.CANCELLED);
@@ -93,7 +93,7 @@ public class OrderService {
         if (managed.getStatus() != OrderStatus.NEW) {
             throw new OrderOperationException("Only NEW orders can be marked as paid");
         }
-        managed.setStatus(managed.hasPhysicalItems() ? OrderStatus.PAID : OrderStatus.FULFILLMENT_PENDING);
+        managed.setStatus(hasPhysicalItems(managed) ? OrderStatus.PAID : OrderStatus.FULFILLMENT_PENDING);
         managed.setUpdatedAt(Instant.now());
         return managed;
     }
@@ -197,5 +197,20 @@ public class OrderService {
     private Order findOrder(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));
+    }
+
+    private boolean isEditable(Order order) {
+        return order.getStatus() == OrderStatus.NEW || order.getStatus() == OrderStatus.FULFILLMENT_PENDING;
+    }
+
+    private boolean isCancellable(Order order) {
+        return order.getStatus() == OrderStatus.NEW
+                || order.getStatus() == OrderStatus.FULFILLMENT_PENDING
+                || order.getStatus() == OrderStatus.PAID;
+    }
+
+    private boolean hasPhysicalItems(Order order) {
+        return order.getItems().stream()
+                .anyMatch(item -> item.getFulfillmentType() == FulfillmentType.PHYSICAL);
     }
 }
