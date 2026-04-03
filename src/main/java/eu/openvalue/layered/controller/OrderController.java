@@ -1,8 +1,8 @@
-package eu.openvalue.hexagonalarchitecture.order.controller;
+package eu.openvalue.layered.controller;
 
-import eu.openvalue.hexagonalarchitecture.order.model.Order;
-import eu.openvalue.hexagonalarchitecture.order.model.OrderStatus;
-import eu.openvalue.hexagonalarchitecture.order.service.OrderService;
+import eu.openvalue.layered.model.Order;
+import eu.openvalue.layered.model.OrderStatus;
+import eu.openvalue.layered.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

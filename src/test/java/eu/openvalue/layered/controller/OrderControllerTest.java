@@ -1,11 +1,11 @@
-package eu.openvalue.hexagonalarchitecture.order.controller;
+package eu.openvalue.layered.controller;
 
-import eu.openvalue.hexagonalarchitecture.order.exception.RestExceptionHandler;
-import eu.openvalue.hexagonalarchitecture.order.model.FulfillmentType;
-import eu.openvalue.hexagonalarchitecture.order.model.Order;
-import eu.openvalue.hexagonalarchitecture.order.model.OrderItem;
-import eu.openvalue.hexagonalarchitecture.order.model.OrderStatus;
-import eu.openvalue.hexagonalarchitecture.order.service.OrderService;
+import eu.openvalue.layered.exception.RestExceptionHandler;
+import eu.openvalue.layered.model.FulfillmentType;
+import eu.openvalue.layered.model.Order;
+import eu.openvalue.layered.model.OrderItem;
+import eu.openvalue.layered.model.OrderStatus;
+import eu.openvalue.layered.service.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

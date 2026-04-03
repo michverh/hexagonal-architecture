@@ -1,10 +1,10 @@
-package eu.openvalue.hexagonalarchitecture.order.service;
+package eu.openvalue.layered.service;
 
-import eu.openvalue.hexagonalarchitecture.order.exception.OrderOperationException;
-import eu.openvalue.hexagonalarchitecture.order.model.FulfillmentType;
-import eu.openvalue.hexagonalarchitecture.order.model.Order;
-import eu.openvalue.hexagonalarchitecture.order.model.OrderItem;
-import eu.openvalue.hexagonalarchitecture.order.repository.OrderRepository;
+import eu.openvalue.layered.exception.OrderOperationException;
+import eu.openvalue.layered.model.FulfillmentType;
+import eu.openvalue.layered.model.Order;
+import eu.openvalue.layered.model.OrderItem;
+import eu.openvalue.layered.repository.OrderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

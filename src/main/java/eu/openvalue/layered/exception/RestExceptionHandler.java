@@ -1,4 +1,4 @@
-package eu.openvalue.hexagonalarchitecture.order.exception;
+package eu.openvalue.layered.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package eu.openvalue.hexagonalarchitecture;
+package eu.openvalue;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

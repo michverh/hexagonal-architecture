@@ -1,7 +1,7 @@
-package eu.openvalue.hexagonalarchitecture.order.repository;
+package eu.openvalue.layered.repository;
 
-import eu.openvalue.hexagonalarchitecture.order.model.Order;
-import eu.openvalue.hexagonalarchitecture.order.model.OrderStatus;
+import eu.openvalue.layered.model.Order;
+import eu.openvalue.layered.model.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;

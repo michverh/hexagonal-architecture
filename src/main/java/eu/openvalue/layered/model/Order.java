@@ -1,4 +1,4 @@
-package eu.openvalue.hexagonalarchitecture.order.model;
+package eu.openvalue.layered.model;
 
 import jakarta.persistence.*;
 

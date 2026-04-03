@@ -1,4 +1,4 @@
-package eu.openvalue.hexagonalarchitecture.order.exception;
+package eu.openvalue.layered.exception;
 
 public class OrderOperationException extends RuntimeException {
 

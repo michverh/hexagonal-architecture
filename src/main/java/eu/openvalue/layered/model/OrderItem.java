@@ -1,4 +1,4 @@
-package eu.openvalue.hexagonalarchitecture.order.model;
+package eu.openvalue.layered.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
