@@ -1,6 +1,12 @@
 package eu.openvalue.layered.model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -9,6 +15,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Order {
 
     @Id
@@ -32,135 +41,24 @@ public class Order {
     private OrderStatus status = OrderStatus.NEW;
 
     @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal merchandiseTotal = BigDecimal.ZERO;
-
-    @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal discountTotal = BigDecimal.ZERO;
-
-    @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal shippingCost = BigDecimal.ZERO;
 
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal totalDue = BigDecimal.ZERO;
 
-    @Column(nullable = false)
-    private Instant createdAt = Instant.now();
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private Instant createdAt;
 
+    @UpdateTimestamp
     @Column(nullable = false)
-    private Instant updatedAt = Instant.now();
+    private Instant updatedAt;
 
     private Instant cancelledAt;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Setter(AccessLevel.NONE)
     private List<OrderItem> items = new ArrayList<>();
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
-    public String getCustomerEmail() {
-        return customerEmail;
-    }
-
-    public void setCustomerEmail(String customerEmail) {
-        this.customerEmail = customerEmail;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getShippingAddress() {
-        return shippingAddress;
-    }
-
-    public void setShippingAddress(String shippingAddress) {
-        this.shippingAddress = shippingAddress;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
-    public BigDecimal getMerchandiseTotal() {
-        return merchandiseTotal;
-    }
-
-    public void setMerchandiseTotal(BigDecimal merchandiseTotal) {
-        this.merchandiseTotal = merchandiseTotal;
-    }
-
-    public BigDecimal getDiscountTotal() {
-        return discountTotal;
-    }
-
-    public void setDiscountTotal(BigDecimal discountTotal) {
-        this.discountTotal = discountTotal;
-    }
-
-    public BigDecimal getShippingCost() {
-        return shippingCost;
-    }
-
-    public void setShippingCost(BigDecimal shippingCost) {
-        this.shippingCost = shippingCost;
-    }
-
-    public BigDecimal getTotalDue() {
-        return totalDue;
-    }
-
-    public void setTotalDue(BigDecimal totalDue) {
-        this.totalDue = totalDue;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Instant getCancelledAt() {
-        return cancelledAt;
-    }
-
-    public void setCancelledAt(Instant cancelledAt) {
-        this.cancelledAt = cancelledAt;
-    }
-
-    public List<OrderItem> getItems() {
-        return items;
-    }
 
     public void setItems(List<OrderItem> items) {
         List<OrderItem> newItems = new ArrayList<>();

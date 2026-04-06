@@ -7,35 +7,25 @@ import eu.openvalue.layered.model.Order;
 import eu.openvalue.layered.model.OrderItem;
 import eu.openvalue.layered.model.OrderStatus;
 import eu.openvalue.layered.repository.OrderRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class OrderService {
 
-    private static final BigDecimal LOYALTY_THRESHOLD = new BigDecimal("500.00");
-    private static final BigDecimal LOYALTY_DISCOUNT_RATE = new BigDecimal("0.05");
     private static final BigDecimal SHIPPING_BASE = new BigDecimal("5.00");
-    private static final BigDecimal SHIPPING_PER_UNIT = BigDecimal.ONE;
-    private static final Set<OrderStatus> OPEN_STATUSES = EnumSet.of(OrderStatus.NEW, OrderStatus.FULFILLMENT_PENDING);
-
+    private static final BigDecimal SHIPPING_THRESHOLD = new BigDecimal("50.00");
     private final OrderRepository orderRepository;
-
-    public OrderService(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
-    }
 
     public Order placeOrder(Order order) {
         if (order == null) {
@@ -44,14 +34,9 @@ public class OrderService {
         validateCustomer(order);
         sanitizeItems(order);
         validateItems(order.getItems());
-        enforceOpenOrderLimit(order.getCustomerEmail());
-
-        Instant now = Instant.now();
         order.setId(null);
         order.setVersion(null);
         order.setStatus(OrderStatus.NEW);
-        order.setCreatedAt(now);
-        order.setUpdatedAt(now);
         order.setCancelledAt(null);
 
         applyFinancials(order);
@@ -73,34 +58,7 @@ public class OrderService {
         sanitizeItems(managed);
         validateItems(managed.getItems());
         applyFinancials(managed);
-        managed.setUpdatedAt(Instant.now());
         return managed;
-    }
-
-    public Order cancelOrder(Long id) {
-        Order managed = findOrder(id);
-        if (!isCancellable(managed)) {
-            throw new OrderOperationException("Order " + id + " can no longer be cancelled");
-        }
-        managed.setStatus(OrderStatus.CANCELLED);
-        managed.setCancelledAt(Instant.now());
-        managed.setUpdatedAt(Instant.now());
-        return managed;
-    }
-
-    public Order markOrderPaid(Long id) {
-        Order managed = findOrder(id);
-        if (managed.getStatus() != OrderStatus.NEW) {
-            throw new OrderOperationException("Only NEW orders can be marked as paid");
-        }
-        managed.setStatus(hasPhysicalItems(managed) ? OrderStatus.PAID : OrderStatus.FULFILLMENT_PENDING);
-        managed.setUpdatedAt(Instant.now());
-        return managed;
-    }
-
-    @Transactional(readOnly = true)
-    public Order getOrder(Long id) {
-        return findOrder(id);
     }
 
     @Transactional(readOnly = true)
@@ -146,13 +104,6 @@ public class OrderService {
         });
     }
 
-    private void enforceOpenOrderLimit(String customerEmail) {
-        long openOrders = orderRepository.countByCustomerEmailAndStatusIn(customerEmail, OPEN_STATUSES);
-        if (openOrders >= 3) {
-            throw new OrderOperationException("Customer " + customerEmail + " already has too many open orders");
-        }
-    }
-
     private void overwriteMutableFields(Order target, Order source) {
         if (StringUtils.hasText(source.getCustomerName())) {
             target.setCustomerName(source.getCustomerName());
@@ -166,32 +117,15 @@ public class OrderService {
     }
 
     private void applyFinancials(Order order) {
-        BigDecimal merchandiseTotal = order.getItems().stream()
+        BigDecimal itemsTotal = order.getItems().stream()
                 .map(OrderItem::lineTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        BigDecimal discount = merchandiseTotal.compareTo(LOYALTY_THRESHOLD) >= 0
-                ? merchandiseTotal.multiply(LOYALTY_DISCOUNT_RATE).setScale(2, RoundingMode.HALF_UP)
-                : BigDecimal.ZERO;
+        BigDecimal shipping = itemsTotal.compareTo(SHIPPING_THRESHOLD) < 0 ? SHIPPING_BASE : BigDecimal.ZERO;
+        BigDecimal totalDue = itemsTotal.add(shipping);
 
-        BigDecimal shipping = calculateShipping(order);
-        BigDecimal totalDue = merchandiseTotal.subtract(discount).add(shipping);
-
-        order.setMerchandiseTotal(merchandiseTotal);
-        order.setDiscountTotal(discount);
         order.setShippingCost(shipping);
         order.setTotalDue(totalDue);
-    }
-
-    private BigDecimal calculateShipping(Order order) {
-        long physicalUnits = order.getItems().stream()
-                .filter(item -> item.getFulfillmentType() == FulfillmentType.PHYSICAL)
-                .mapToLong(OrderItem::getQuantity)
-                .sum();
-        if (physicalUnits == 0) {
-            return BigDecimal.ZERO;
-        }
-        return SHIPPING_BASE.add(BigDecimal.valueOf(physicalUnits).multiply(SHIPPING_PER_UNIT));
     }
 
     private Order findOrder(Long id) {
@@ -203,14 +137,4 @@ public class OrderService {
         return order.getStatus() == OrderStatus.NEW || order.getStatus() == OrderStatus.FULFILLMENT_PENDING;
     }
 
-    private boolean isCancellable(Order order) {
-        return order.getStatus() == OrderStatus.NEW
-                || order.getStatus() == OrderStatus.FULFILLMENT_PENDING
-                || order.getStatus() == OrderStatus.PAID;
-    }
-
-    private boolean hasPhysicalItems(Order order) {
-        return order.getItems().stream()
-                .anyMatch(item -> item.getFulfillmentType() == FulfillmentType.PHYSICAL);
-    }
 }

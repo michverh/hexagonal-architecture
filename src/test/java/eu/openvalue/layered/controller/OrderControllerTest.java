@@ -81,19 +81,6 @@ class OrderControllerTest {
     }
 
     @Test
-    void cancelOrderPassesReasonThrough() throws Exception {
-        Order order = baseOrder();
-        given(orderService.cancelOrder(eq(5L))).willReturn(order);
-
-        mockMvc.perform(post("/orders/5/cancel")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"reason\":\"Fraud alert\"}"))
-                .andExpect(status().isOk());
-
-        verify(orderService).cancelOrder(eq(5L));
-    }
-
-    @Test
     void listOrdersSupportsStatusFilter() throws Exception {
         Order order = baseOrder();
         order.setStatus(OrderStatus.NEW);
@@ -146,7 +133,6 @@ class OrderControllerTest {
         @Override
         protected boolean supports(Class<?> clazz) {
             return Order.class.isAssignableFrom(clazz)
-                    || CancelOrderRequest.class.isAssignableFrom(clazz)
                     || Collection.class.isAssignableFrom(clazz);
         }
 
@@ -154,10 +140,6 @@ class OrderControllerTest {
         protected Object readInternal(Class<?> clazz, HttpInputMessage inputMessage) throws IOException {
             if (Order.class.isAssignableFrom(clazz)) {
                 return orderSupplier.get();
-            }
-            if (CancelOrderRequest.class.isAssignableFrom(clazz)) {
-                String body = StreamUtils.copyToString(inputMessage.getBody(), StandardCharsets.UTF_8);
-                return new CancelOrderRequest(extractValue(body, "reason"));
             }
             throw new HttpMessageNotReadableException("Unsupported payload", inputMessage);
         }
@@ -201,18 +183,5 @@ class OrderControllerTest {
             return value == null ? "null" : value.toString();
         }
 
-        private String extractValue(String body, String field) {
-            String marker = "\"" + field + "\":";
-            int start = body.indexOf(marker);
-            if (start < 0) {
-                return "";
-            }
-            int firstQuote = body.indexOf('"', start + marker.length());
-            int endQuote = body.indexOf('"', firstQuote + 1);
-            if (firstQuote < 0 || endQuote < 0) {
-                return "";
-            }
-            return body.substring(firstQuote + 1, endQuote);
-        }
     }
 }
