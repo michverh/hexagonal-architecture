@@ -4,7 +4,7 @@ import eu.openvalue.layered.exception.RestExceptionHandler;
 import eu.openvalue.layered.model.FulfillmentType;
 import eu.openvalue.layered.model.Order;
 import eu.openvalue.layered.model.OrderItem;
-import eu.openvalue.layered.model.OrderStatus;
+import eu.openvalue.layered.repository.OrderStatus;
 import eu.openvalue.layered.service.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,6 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.math.BigDecimal;

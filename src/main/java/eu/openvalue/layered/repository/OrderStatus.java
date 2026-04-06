@@ -1,4 +1,4 @@
-package eu.openvalue.layered.model;
+package eu.openvalue.layered.repository;
 
 public enum OrderStatus {
     NEW,

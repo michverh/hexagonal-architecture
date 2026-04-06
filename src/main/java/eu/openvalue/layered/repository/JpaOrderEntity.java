@@ -1,6 +1,5 @@
-package eu.openvalue.layered.model;
+package eu.openvalue.layered.repository;
 
-import eu.openvalue.layered.repository.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "hex_orders")
 @Getter
 @Setter
-@NoArgsConstructor
-public class Order {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class JpaOrderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,13 +38,13 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private OrderStatus status = OrderStatus.NEW;
+    private OrderStatus status;
 
     @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal shippingCost = BigDecimal.ZERO;
+    private BigDecimal shippingCost;
 
     @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal totalDue = BigDecimal.ZERO;
+    private BigDecimal totalDue;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
@@ -55,30 +54,19 @@ public class Order {
     @Column(nullable = false)
     private Instant updatedAt;
 
-    private Instant cancelledAt;
-
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Setter(AccessLevel.NONE)
-    private List<OrderItem> items = new ArrayList<>();
+    private List<JpaOrderItemEntity> items = new ArrayList<>();
 
-    public void setItems(List<OrderItem> items) {
-        List<OrderItem> newItems = new ArrayList<>();
-        if (items != null) {
-            newItems.addAll(items);
-        }
-        this.items.clear();
-        newItems.forEach(this::addItem);
-    }
-
-    public void addItem(OrderItem item) {
-        if (item == null) {
-            return;
-        }
+    public void addItem(JpaOrderItemEntity item) {
         item.setOrder(this);
-        this.items.add(item);
+        items.add(item);
     }
 
-    public void clearItems() {
+    public void setItems(List<JpaOrderItemEntity> items) {
         this.items.clear();
+        if (items != null) {
+            items.forEach(this::addItem);
+        }
     }
 }

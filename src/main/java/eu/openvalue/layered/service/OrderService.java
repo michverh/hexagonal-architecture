@@ -5,7 +5,7 @@ import eu.openvalue.layered.exception.OrderOperationException;
 import eu.openvalue.layered.model.FulfillmentType;
 import eu.openvalue.layered.model.Order;
 import eu.openvalue.layered.model.OrderItem;
-import eu.openvalue.layered.model.OrderStatus;
+import eu.openvalue.layered.repository.OrderStatus;
 import eu.openvalue.layered.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
