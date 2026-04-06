@@ -1,7 +1,5 @@
 package eu.openvalue.hexagonalarchitecture.domain;
 
-import org.springframework.util.StringUtils;
-
 import java.math.BigDecimal;
 
 public class OrderLine {
@@ -12,10 +10,10 @@ public class OrderLine {
     private final Money unitPrice;
 
     public OrderLine(String productCode, String productName, int quantity, Money unitPrice) {
-        if (!StringUtils.hasText(productCode)) {
+        if (null == productCode || productCode.isEmpty()) {
             throw new IllegalArgumentException("Product code is required");
         }
-        if (!StringUtils.hasText(productName)) {
+        if (null == productName || productName.isEmpty()) {
             throw new IllegalArgumentException("Product name is required");
         }
         if (quantity <= 0) {
