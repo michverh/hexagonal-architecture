@@ -51,8 +51,7 @@ class HexagonalLayersTest {
       .resideInAnyPackage(
           "eu.openvalue.hexagonalarchitecture.application..",
           "eu.openvalue.hexagonalarchitecture.domain..",
-          "java..",
-          "org.springframework.."
+          "java.."
       );
 
   @ArchTest
