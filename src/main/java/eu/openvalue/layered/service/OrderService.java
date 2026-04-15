@@ -2,10 +2,9 @@ package eu.openvalue.layered.service;
 
 import eu.openvalue.layered.exception.OrderNotFoundException;
 import eu.openvalue.layered.exception.OrderOperationException;
-import eu.openvalue.layered.model.FulfillmentType;
 import eu.openvalue.layered.model.Order;
 import eu.openvalue.layered.model.OrderItem;
-import eu.openvalue.layered.repository.OrderStatus;
+import eu.openvalue.layered.model.OrderStatus;
 import eu.openvalue.layered.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -97,9 +96,6 @@ public class OrderService {
             }
             if (item.getUnitPrice() == null || item.getUnitPrice().compareTo(BigDecimal.ZERO) <= 0) {
                 throw new IllegalArgumentException("Item unit price must be positive");
-            }
-            if (item.getFulfillmentType() == null) {
-                item.setFulfillmentType(FulfillmentType.DIGITAL);
             }
         });
     }

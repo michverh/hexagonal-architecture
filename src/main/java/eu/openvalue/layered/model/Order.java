@@ -1,6 +1,5 @@
 package eu.openvalue.layered.model;
 
-import eu.openvalue.layered.repository.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -76,9 +75,5 @@ public class Order {
         }
         item.setOrder(this);
         this.items.add(item);
-    }
-
-    public void clearItems() {
-        this.items.clear();
     }
 }

@@ -1,7 +1,7 @@
 package eu.openvalue.layered.controller;
 
 import eu.openvalue.layered.model.Order;
-import eu.openvalue.layered.repository.OrderStatus;
+import eu.openvalue.layered.model.OrderStatus;
 import eu.openvalue.layered.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
