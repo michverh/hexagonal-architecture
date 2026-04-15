@@ -11,12 +11,10 @@ import eu.openvalue.hexagonalarchitecture.domain.Order;
 import eu.openvalue.hexagonalarchitecture.domain.OrderLine;
 import eu.openvalue.hexagonalarchitecture.domain.OrderLines;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Transactional
 public class UpdateOrderService implements UpdateOrderUseCase {
 
     private final OrderPersistencePort persistencePort;
