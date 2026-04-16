@@ -13,22 +13,22 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/hex/orders")
 @RequiredArgsConstructor
-public class HexOrderController {
+public class OrderController {
 
     private final PlaceOrderUseCase placeOrderUseCase;
     private final UpdateOrderUseCase updateOrderUseCase;
     private final ListOrdersUseCase listOrdersUseCase;
-    private final HexOrderMapper mapper;
+    private final OrderMapper mapper;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderResponse placeOrder(@RequestBody HexOrderRequest request) {
+    public OrderResponse placeOrder(@RequestBody OrderRequest request) {
         Order order = placeOrderUseCase.placeOrder(mapper.toPlaceOrderCommand(request));
         return mapper.toOrderResponse(order);
     }
 
     @PutMapping("/{id}")
-    public OrderResponse updateOrder(@PathVariable Long id, @RequestBody HexOrderUpdateRequest request) {
+    public OrderResponse updateOrder(@PathVariable Long id, @RequestBody OrderUpdateRequest request) {
         Order order = updateOrderUseCase.updateOrder(mapper.toUpdateOrderCommand(id, request));
         return mapper.toOrderResponse(order);
     }

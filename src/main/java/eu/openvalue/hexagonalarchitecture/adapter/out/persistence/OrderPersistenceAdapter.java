@@ -15,7 +15,7 @@ import java.util.Optional;
 public class OrderPersistenceAdapter implements OrderPersistencePort, OrderLookupPort {
 
     private final JpaOrderRepository orderRepository;
-    private final HexOrderPersistenceMapper mapper;
+    private final OrderPersistenceMapper mapper;
 
     @Override
     public Order save(Order order) {

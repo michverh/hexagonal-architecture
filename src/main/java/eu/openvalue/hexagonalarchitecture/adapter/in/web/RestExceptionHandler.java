@@ -11,7 +11,7 @@ import java.time.Instant;
 import java.util.Map;
 
 @RestControllerAdvice(basePackages = "eu.openvalue.hexagonalarchitecture.adapter.in.web")
-public class HexRestExceptionHandler {
+public class RestExceptionHandler {
 
     @ExceptionHandler(HexOrderNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleNotFound(HexOrderNotFoundException ex) {

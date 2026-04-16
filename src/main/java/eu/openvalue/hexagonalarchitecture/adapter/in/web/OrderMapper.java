@@ -12,15 +12,15 @@ import org.mapstruct.ReportingPolicy;
 import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface HexOrderMapper {
+public interface OrderMapper {
 
-    PlaceOrderCommand toPlaceOrderCommand(HexOrderRequest request);
+    PlaceOrderCommand toPlaceOrderCommand(OrderRequest request);
 
     @Mapping(target = "orderId", source = "orderId")
     @Mapping(target = "customerName", source = "request.customerName")
     @Mapping(target = "shippingAddress", source = "request.shippingAddress")
     @Mapping(target = "items", source = "request.items")
-    UpdateOrderCommand toUpdateOrderCommand(Long orderId, HexOrderUpdateRequest request);
+    UpdateOrderCommand toUpdateOrderCommand(Long orderId, OrderUpdateRequest request);
 
     @Mapping(target = "id", expression = "java(order.id().value())")
     @Mapping(target = "customerEmail", expression = "java(order.customer().email())")

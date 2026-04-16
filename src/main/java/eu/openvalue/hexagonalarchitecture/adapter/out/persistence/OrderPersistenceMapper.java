@@ -8,7 +8,7 @@ import org.mapstruct.ReportingPolicy;
 import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface HexOrderPersistenceMapper {
+public interface OrderPersistenceMapper {
 
     @Mapping(target = "id", expression = "java(order.id().value())")
     @Mapping(target = "customerEmail", expression = "java(order.customer().email())")
